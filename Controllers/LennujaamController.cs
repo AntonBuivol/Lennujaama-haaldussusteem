@@ -6,7 +6,7 @@ using System.Xml.Linq;
 
 namespace Lennujaama_haaldussusteem.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class LennujaamController : ControllerBase
     {

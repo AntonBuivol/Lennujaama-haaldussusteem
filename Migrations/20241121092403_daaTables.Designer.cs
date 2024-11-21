@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lennujaama_haaldussusteem.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20241120092941_addTables")]
-    partial class addTables
+    [Migration("20241121092403_daaTables")]
+    partial class daaTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

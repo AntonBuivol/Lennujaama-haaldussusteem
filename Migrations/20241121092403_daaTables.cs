@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Lennujaama_haaldussusteem.Migrations
 {
     /// <inheritdoc />
-    public partial class addTables : Migration
+    public partial class daaTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Lennujaama_haaldussusteem.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class KasutajaController : ControllerBase
     {
