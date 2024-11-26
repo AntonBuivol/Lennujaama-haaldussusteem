@@ -22,14 +22,24 @@ namespace Lennujaama_haaldussusteem.Controllers
         {
             if (newUser == null)
             {
-                return BadRequest("User data is null.");
+                return BadRequest(new { message = "User data is null." });
+            }
+
+            if (string.IsNullOrWhiteSpace(newUser.UserName))
+            {
+                return BadRequest(new { message = "Username cannot be empty." });
+            }
+
+            if (string.IsNullOrWhiteSpace(newUser.Password))
+            {
+                return BadRequest(new { message = "Password cannot be empty." });
             }
 
             var existingUser = await _context.Kasutajad.FirstOrDefaultAsync(k => k.UserName == newUser.UserName);
 
             if (existingUser != null)
             {
-                return BadRequest("User with this username already exists.");
+                return BadRequest(new { message = "User with this username already exists." });
             }
 
             var user = new Kasutajad
@@ -46,14 +56,14 @@ namespace Lennujaama_haaldussusteem.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(string username, string password)
+        public IActionResult Login([FromBody] Kasutajad kasutajad)
         {
-            var userExist = _context.Kasutajad.FirstOrDefault(k => k.UserName == username);
-            if (userExist != null && password == userExist.Password)
+            var userExist = _context.Kasutajad.FirstOrDefault(k => k.UserName == kasutajad.UserName);
+            if (userExist != null && kasutajad.Password == userExist.Password)
             {
                 return Ok(new { message = "Login successfully" });
             }
-            return Ok(new { message = "Login is incorrect" });
+            return BadRequest(new { message = "Login or password is incorrect" });
         }
 
         [HttpGet("Kasutaja")]

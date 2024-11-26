@@ -32,22 +32,33 @@ namespace Lennujaama_haaldussusteem.Controllers
         }
 
         [HttpPost("lisa")]
-        public List<Lennujaamad> LisaLennujaam([FromBody] Lennujaamad lennujaamad)
+        public IActionResult LisaLennujaam([FromBody] Lennujaamad lennujaamad)
         {
+            if (string.IsNullOrWhiteSpace(lennujaamad.Valjumiskoht) || string.IsNullOrEmpty(lennujaamad.Saabumiskoht))
+            {
+                return BadRequest(new { message = "Väljumiskoht and Saabumiskoht can't be null" });
+            }
+
             _context.Lennujaamad.Add(lennujaamad);
             _context.SaveChanges();
-            return _context.Lennujaamad.ToList();
+            return Ok(_context.Lennujaamad.ToList());
         }
 
         [HttpPut("muuda/{id}")]
         public IActionResult UpdateLennujaam(int id, [FromBody] Lennujaamad updatedLennujaam)
         {
-            if (id < 1 || id > _context.Lennujaamad.Count())
+            var lennujaam = _context.Lennujaamad.Find(id);
+
+            if (lennujaam == null)
             {
-                return BadRequest("Invalid index.");
+                return BadRequest(new { message = "Invalid index." });
             }
 
-            var lennujaam = _context.Lennujaamad.Find(id);
+            if(string.IsNullOrWhiteSpace(updatedLennujaam.Valjumiskoht) || string.IsNullOrEmpty(updatedLennujaam.Saabumiskoht))
+            {
+                return BadRequest(new { message = "Väljumiskoht and Saabumiskoht can't be null" });
+            }
+
             lennujaam.Valjumiskoht = updatedLennujaam.Valjumiskoht;
             lennujaam.Saabumiskoht = updatedLennujaam.Saabumiskoht;
             lennujaam.Valjumisaeg = updatedLennujaam.Valjumisaeg;
