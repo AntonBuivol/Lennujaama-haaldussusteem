@@ -19,6 +19,7 @@ namespace Lennujaama_haaldussusteem.Controllers
         [HttpGet]
         public List<Lennujaamad> GetLennujaam()
         {
+
             return _context.Lennujaamad.ToList();
         }
 
@@ -34,7 +35,7 @@ namespace Lennujaama_haaldussusteem.Controllers
         [HttpPost("lisa")]
         public IActionResult LisaLennujaam([FromBody] Lennujaamad lennujaamad)
         {
-            if (string.IsNullOrWhiteSpace(lennujaamad.Valjumiskoht) || string.IsNullOrEmpty(lennujaamad.Saabumiskoht))
+            if (string.IsNullOrWhiteSpace(lennujaamad.Valjumiskoht) || string.IsNullOrWhiteSpace(lennujaamad.Saabumiskoht))
             {
                 return BadRequest(new { message = "Väljumiskoht and Saabumiskoht can't be null" });
             }
