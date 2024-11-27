@@ -20,16 +20,16 @@ th, td {
 th {
     background-color: black;
     color: white;
-    cursor: pointer;
 }
 
 form {
     margin-top: 20px;
 }
 
-input[type="text"], input[type="datetime-local"] {
+input[type="text"], input[type="datetime-local"],input[type="password"] {
     padding: 8px;
     margin-top: 10px;
+    margin-left: 10px;
 }
 
 td {
