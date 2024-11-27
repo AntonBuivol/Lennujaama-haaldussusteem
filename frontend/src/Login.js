@@ -6,6 +6,7 @@ function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const [url, setUrl] = useState('');
     const [showPassword, setShowPassword] = useState(false);
 
     const navigate = useNavigate();
@@ -15,14 +16,15 @@ function Login() {
             const response = await fetch("https://localhost:7050/Kasutaja/login", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password }),
+                body: JSON.stringify({ username, password })
             });
 
             const data = await response.json();
 
             if (response.ok) {
                 setMessage(data.message);
-                setTimeout(() => navigate('/lennujaamad'), 2000);
+                setUrl(data.url);
+                setTimeout(() => navigate(data.url), 2000);
             } else {
                 setMessage(data.message);
             }
@@ -35,6 +37,7 @@ function Login() {
         <div className="App">
             <h1>Login</h1>
             <div>
+                <label>Username:</label>
                 <input
                     type="text"
                     placeholder="Username"
@@ -43,13 +46,13 @@ function Login() {
                 />
                 <br />
                 <div>
+                    <label>Password:</label>
                     <input
                         type={showPassword ? 'text' : 'password'}
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <br />
                     <button id="showPass"
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
