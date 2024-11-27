@@ -61,7 +61,11 @@ namespace Lennujaama_haaldussusteem.Controllers
             var userExist = _context.Kasutajad.FirstOrDefault(k => k.UserName == kasutajad.UserName);
             if (userExist != null && kasutajad.Password == userExist.Password)
             {
-                return Ok(new { message = "Login successfully" });
+                if(userExist.isAdmin)
+                {
+                    return Ok(new { message = "Hello Admin", url = "/lennujaamadAdmin" });
+                }
+                return Ok(new { message = "Login successfully", url = "/lennujaamad" });
             }
             return BadRequest(new { message = "Login or password is incorrect" });
         }
