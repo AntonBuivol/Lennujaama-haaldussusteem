@@ -63,9 +63,9 @@ namespace Lennujaama_haaldussusteem.Controllers
             {
                 if(userExist.isAdmin)
                 {
-                    return Ok(new { message = "Hello Admin", url = "/lennujaamadAdmin" });
+                    return Ok(new { message = "Hello Admin", isAdmin = true });
                 }
-                return Ok(new { message = "Login successfully", url = "/lennujaamad" });
+                return Ok(new { message = "Login successfully", isAdmin = false });
             }
             return BadRequest(new { message = "Login or password is incorrect" });
         }

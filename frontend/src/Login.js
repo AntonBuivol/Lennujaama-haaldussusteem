@@ -2,12 +2,13 @@
 import { useNavigate } from 'react-router-dom';
 import "./Style.css";
 
-function Login() {
+function Login({ setCurrentUser }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const [url, setUrl] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [role, setRole] = useState(null);
 
     const navigate = useNavigate();
 
@@ -23,14 +24,24 @@ function Login() {
 
             if (response.ok) {
                 setMessage(data.message);
-                setUrl(data.url);
-                setTimeout(() => navigate(data.url), 2000);
+                setCurrentUser({ username, isAdmin: data.isAdmin });
+                if (data.isAdmin) {
+                    setTimeout(() => navigate('/lennujaamadAdmin'), 2000);
+                } else {
+                    setTimeout(() => navigate('/lennujaamad'), 2000);
+                }
             } else {
                 setMessage(data.message);
             }
         } catch (error) {
             setMessage("Error: " + error.message);
         }
+    };
+
+    const logoutUser = () => {
+        setCurrentUser(null);
+        setMessage("Logged out successfully.");
+        navigate('/login');
     };
 
     return (

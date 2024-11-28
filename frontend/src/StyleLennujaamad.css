@@ -20,6 +20,7 @@ th, td {
 th {
     background-color: black;
     color: white;
+    cursor: pointer;
 }
 
 form {
@@ -81,4 +82,8 @@ button {
 
 #delete:hover{
     background-color: darkred;
+}
+
+th:hover{
+
 }
