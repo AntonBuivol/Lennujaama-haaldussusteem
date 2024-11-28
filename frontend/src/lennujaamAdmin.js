@@ -112,13 +112,15 @@ function LennujaamAdmin() {
         <div className="App">
             <h1>Lennujaama Haldussüsteem</h1>
             <div>
+                <label>Väljumiskoht:</label>
                 <input
                     type="text"
-                    placeholder="Valjumiskoht"
+                    placeholder="Väljumiskoht"
                     value={valjumiskoht}
                     onChange={(e) => setValjumiskoht(e.target.value)}
                 />
                 <br />
+                <label>Saabumiskoht:</label>
                 <input
                     type="text"
                     placeholder="Saabumiskoht"
@@ -126,6 +128,7 @@ function LennujaamAdmin() {
                     onChange={(e) => setSaabumiskoht(e.target.value)}
                 />
                 <br />
+                <label>Search Väljumisaeg:</label>
                 <input
                     type="datetime-local"
                     placeholder="Valjumisaeg"
@@ -133,6 +136,7 @@ function LennujaamAdmin() {
                     onChange={(e) => setValjumisaeg(e.target.value)}
                 />
                 <br />
+                <label>Search Saabumisaeg:</label>
                 <input
                     type="datetime-local"
                     placeholder="Saabumisaeg"

@@ -1,8 +1,8 @@
 ﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './App.css';
+import "./Style.css";
 
-function App() {
+function Registration() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isAdmin, setIsAdmin] = useState(false);
@@ -35,9 +35,9 @@ function App() {
 
     return (
         <div className="App">
-            <h1>User Registration</h1>
-
+            <h1>Registration</h1>
             <div>
+                <label>Username:</label>
                 <input
                     type="text"
                     placeholder="Username"
@@ -46,6 +46,7 @@ function App() {
                 />
                 <br />
                 <div>
+                    <label>Password:</label>
                     <input
                         type={showPassword ? 'text' : 'password'}
                         placeholder="Password"
@@ -77,4 +78,4 @@ function App() {
     );
 }
 
-export default App;
+export default Registration;
