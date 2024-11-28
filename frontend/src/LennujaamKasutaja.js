@@ -11,6 +11,7 @@ function LennujaamKasutaja() {
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
     const [filteredLennujaamad, setFilteredLennujaamad] = useState([])
+    const [sorting, setSort] = useState({ key: '', direction: 'asc' });
 
     useEffect(() => {
         fetchLennujaamad();
@@ -65,6 +66,24 @@ function LennujaamKasutaja() {
         filterLennujaamad();
     };
 
+    const Sort = (key) => {
+        const direction = sorting.key === key && sorting.direction === 'asc' ? 'desc' : 'asc';
+        setSort({ key, direction });
+
+        const sorted = [...filteredLennujaamad].sort((a, b) => {
+            if (key === 'valjumisaeg' || key === 'saabumisaeg') {
+                return direction === 'asc'
+                    ? new Date(a[key]) - new Date(b[key])
+                    : new Date(b[key]) - new Date(a[key]);
+            } else {
+                return direction === 'asc'
+                    ? a[key].localeCompare(b[key])
+                    : b[key].localeCompare(a[key]);
+            }
+        });
+        setFilteredLennujaamad(sorted);
+    };
+
     return (
         <div className="App">
             <h1>Lennujaama Haldussüsteem</h1>
@@ -87,10 +106,10 @@ function LennujaamKasutaja() {
             <table>
                 <thead>
                     <tr>
-                        <th>Väljumiskoht</th>
-                        <th>Saabumiskoht</th>
-                        <th>Valjumisaeg</th>
-                        <th>Saabumisaeg</th>
+                        <th onClick={() => Sort('valjumiskoht')}>Väljumiskoht</th>
+                        <th onClick={() => Sort('saabumiskoht')}>Saabumiskoht</th>
+                        <th onClick={() => Sort('valjumisaeg')}>Valjumisaeg</th>
+                        <th onClick={() => Sort('saabumisaeg')}>Saabumisaeg</th>
                     </tr>
                 </thead>
                 {filteredLennujaamad.map(lennujaam => (
