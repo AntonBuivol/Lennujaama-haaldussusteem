@@ -9,8 +9,8 @@ function LennujaamKasutaja() {
     const [valjumisaeg, setValjumisaeg] = useState('');
     const [saabumisaeg, setSaabumisaeg] = useState('');
     const [message, setMessage] = useState('');
-    const [sort, setSort] = useState();
     const navigate = useNavigate();
+    const [filteredLennujaamad, setFilteredLennujaamad] = useState([])
 
     useEffect(() => {
         fetchLennujaamad();
@@ -21,12 +21,49 @@ function LennujaamKasutaja() {
             const response = await fetch("https://localhost:7050/Lennujaam");
             const data = await response.json();
             setLennujaamad(data);
+            setFilteredLennujaamad(data);
         } catch(error) {
             setMessage("Error fetching data: " + error.message);
         }
     };
 
+    const filterLennujaamad = () => {
+        let filtered = lennujaamad;
 
+        if (valjumiskoht) {
+            filtered = filtered.filter(l =>
+                l.valjumiskoht.toLowerCase().includes(valjumiskoht.toLowerCase())
+            );
+        }
+
+        if (saabumiskoht) {
+            filtered = filtered.filter(l =>
+                l.saabumiskoht.toLowerCase().includes(saabumiskoht.toLowerCase())
+            );
+        }
+
+        if (valjumisaeg) {
+            filtered = filtered.filter(l =>
+                new Date(l.valjumisaeg) >= new Date(valjumisaeg)
+            );
+        }
+
+        if (saabumisaeg) {
+            filtered = filtered.filter(l =>
+                new Date(l.saabumisaeg) <= new Date(saabumisaeg)
+            );
+        }
+
+        setFilteredLennujaamad(filtered);
+    };
+
+    const ResetFilter = () => {
+        setValjumiskoht('');
+        setSaabumiskoht('');
+        setValjumisaeg('');
+        setSaabumisaeg('');
+        filterLennujaamad();
+    };
 
     return (
         <div className="App">
@@ -34,16 +71,18 @@ function LennujaamKasutaja() {
             <h2>Lennujaamad</h2>
             <form>
                 <label for="searchValjumiskoht">Search Väljumiskoht:</label>
-                <input type="text" id="searchValjumiskoht" name="searchValjumiskoht" placeholder="Serach Väljumiskoht" />
+                <input type="text" value={valjumiskoht} onChange={(e) => setValjumiskoht(e.target.value)} placeholder="Serach Väljumiskoht" onKeyUp={filterLennujaamad} />
                 <br/>
                 <label for="searchSaabumiskoht">Search Saabumiskoht:</label>
-                <input type="text" id="searchSaabumiskoht" name="searchSaabumiskoht" placeholder="Serach Saabumiskoht" />
+                <input type="text" value={saabumiskoht} onChange={(e) => setSaabumiskoht(e.target.value)} placeholder="Serach Saabumiskoht" onKeyUp={filterLennujaamad} />
                 <br/>
                 <label for="searchValjumisaeg">Search Väljumisaeg:</label>
-                <input type="datetime-local" id="searchValjumisaeg" name="searchValjumisaeg" />
+                <input type="date" value={valjumisaeg} onChange={(e) => setValjumisaeg(e.target.value)} onKeyUp={filterLennujaamad} />
                 <br/>
                 <label for="searchSaabumisaeg">Search Saabumisaeg:</label>
-                <input type="datetime-local" id="searchSaabumisaeg" name="searchSaabumisaeg" />
+                <input type="date" value={saabumisaeg} onChange={(e) => setSaabumisaeg(e.target.value)} onKeyUp={filterLennujaamad} />
+                <br />
+                <button onClick={ResetFilter}>Reset</button>
             </form>
             <table>
                 <thead>
@@ -54,7 +93,7 @@ function LennujaamKasutaja() {
                         <th>Saabumisaeg</th>
                     </tr>
                 </thead>
-                {lennujaamad.map(lennujaam => (
+                {filteredLennujaamad.map(lennujaam => (
                     <tr key={lennujaam.id}>
                         <td>{lennujaam.valjumiskoht}</td>
                         <td>{lennujaam.saabumiskoht}</td>
