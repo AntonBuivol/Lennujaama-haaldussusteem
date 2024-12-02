@@ -7,10 +7,6 @@ function MainPage() {
         <div className="App">
             <h1>Lennujaama Haaldussüsteem</h1>
             <div>
-                <button><a href="http://localhost:3000/lennujaamad">Kasutaja</a></button>
-                <br/>
-                <button><a href="http://localhost:3000/lennujaamadAdmin">Admin</a></button>
-                <br/>
                 <button><a href="http://localhost:3000/login">Login</a></button>
                 <br/>
                 <button><a href="http://localhost:3000/registration">Registration</a></button>

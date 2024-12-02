@@ -1,80 +1,72 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './App.css';
+﻿import React, { useState, useEffect } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Login from './Login';
+import Registration from './Registration';
+import LennujaamAdmin from './LennujaamAdmin';
+import LennujaamKasutaja from './LennujaamKasutaja';
+import MainPage from './MainPage';
+import Navbar from './Navbar';
 
-function App() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [isAdmin, setIsAdmin] = useState(false);
-    const [message, setMessage] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
+const App = () => {
+    const [currentUser, setCurrentUser] = useState(null);
 
-    const navigate = useNavigate();
-
-    const registerUser = async () => {
-        try {
-            const response = await fetch("https://localhost:7050/Kasutaja/register", {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password, isAdmin }),
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                setMessage(data.message);
-                setTimeout(() => navigate('/login'), 2000);
-            }
-            else {
-                setMessage(data.message);
-            }
-        } catch (error) {
-            setMessage("Error: " + error.message);
+    useEffect(() => {
+        // Восстанавливаем данные пользователя из localStorage при загрузке
+        const storedUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (storedUser) {
+            setCurrentUser(storedUser);
         }
+    }, []);
+
+    const handleLogin = (user) => {
+        setCurrentUser(user);
+        localStorage.setItem('currentUser', JSON.stringify(user));
+    };
+
+    const handleLogout = () => {
+        setCurrentUser(null);
+        localStorage.removeItem('currentUser');
     };
 
     return (
-        <div className="App">
-            <h1>User Registration</h1>
-
-            <div>
-                <input
-                    type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+        <>
+            <Navbar currentUser={currentUser} onLogout={handleLogout} />
+            <Routes>
+                <Route path="/" element={<MainPage />} />
+                <Route
+                    path="/login"
+                    element={
+                        currentUser ? (
+                            <Navigate to={currentUser.isAdmin ? '/lennujaamadAdmin' : '/lennujaamad'} />
+                        ) : (
+                            <Login setCurrentUser={handleLogin} />
+                        )
+                    }
                 />
-                <br/>
-                <div>
-                    <input
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <button id="showPass"
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                    >
-                        {showPassword ? 'Hide' : 'Show'}
-                    </button>
-                </div>
-                <br/>
-                <label>
-                    <input
-                        type="checkbox"
-                        checked={isAdmin}
-                        onChange={(e) => setIsAdmin(e.target.checked)}
-                    />
-                    Admin
-                    <br/>
-                </label>
-                <button onClick={registerUser}>Register</button>
-            </div>
-
-            {message && <p>{message}</p>}
-        </div>
+                <Route path="/registration" element={<Registration />} />
+                <Route
+                    path="/lennujaamadAdmin"
+                    element={
+                        currentUser && currentUser.isAdmin ? (
+                            <LennujaamAdmin />
+                        ) : (
+                            <Navigate to="/" />
+                        )
+                    }
+                />
+                <Route
+                    path="/lennujaamad"
+                    element={
+                        currentUser ? (
+                            <LennujaamKasutaja />
+                        ) : (
+                            <Navigate to="/login" />
+                        )
+                    }
+                />
+            </Routes>
+        </>
     );
-}
+};
 
 export default App;

@@ -38,7 +38,7 @@ function Registration() {
             <h1>Registration</h1>
             <div>
                 <label>Username:</label>
-                <input
+                <input id="username"
                     type="text"
                     placeholder="Username"
                     value={username}

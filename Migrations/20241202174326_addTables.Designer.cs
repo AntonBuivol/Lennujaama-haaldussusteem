@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lennujaama_haaldussusteem.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20241128090549_addTables")]
+    [Migration("20241202174326_addTables")]
     partial class addTables
     {
         /// <inheritdoc />
