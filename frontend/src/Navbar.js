@@ -20,10 +20,12 @@ const Navbar = ({ currentUser, onLogout }) => {
                         {currentUser.isAdmin && (
                             <li>
                                 <Link to="/lennujaamadAdmin">Admin Page</Link>
+                                <Link to="/piletidAdmin">Piletid Admin</Link>
                             </li>
                         )}
                         <li>
                             <Link to="/lennujaamad">Lennujaamad</Link>
+                            <Link to="/piletid">Piletid</Link>
                         </li>
                         <li>
                             <button onClick={onLogout}>Logout</button>

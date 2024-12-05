@@ -10,6 +10,8 @@
         public DateTime Valjumisaeg {  set; get; }
         public DateTime Saabumisaeg {  get; set; }
 
+        public List<Piletid> Piletids { get; set; } = new List<Piletid>();
+
         public Lennujaamad()
         {
 

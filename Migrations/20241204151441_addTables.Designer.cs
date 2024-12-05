@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lennujaama_haaldussusteem.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20241202174326_addTables")]
+    [Migration("20241204151441_addTables")]
     partial class addTables
     {
         /// <inheritdoc />
@@ -74,6 +74,59 @@ namespace Lennujaama_haaldussusteem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Lennujaamad");
+                });
+
+            modelBuilder.Entity("Lennujaama_haaldussusteem.Models.Piletid", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("KasutajaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LennujaamId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("kasutajadId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("lennujaamadId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("kasutajadId");
+
+                    b.HasIndex("lennujaamadId");
+
+                    b.ToTable("Piletid");
+                });
+
+            modelBuilder.Entity("Lennujaama_haaldussusteem.Models.Piletid", b =>
+                {
+                    b.HasOne("Lennujaama_haaldussusteem.Models.Kasutajad", "kasutajad")
+                        .WithMany()
+                        .HasForeignKey("kasutajadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lennujaama_haaldussusteem.Models.Lennujaamad", "lennujaamad")
+                        .WithMany("Piletids")
+                        .HasForeignKey("lennujaamadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("kasutajad");
+
+                    b.Navigation("lennujaamad");
+                });
+
+            modelBuilder.Entity("Lennujaama_haaldussusteem.Models.Lennujaamad", b =>
+                {
+                    b.Navigation("Piletids");
                 });
 #pragma warning restore 612, 618
         }

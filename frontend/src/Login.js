@@ -28,7 +28,7 @@ function Login({ setCurrentUser }) {
 
                 if (response.ok) {
                     setMessage(data.message);
-                    const user = { username, isAdmin: data.isAdmin };
+                    const user = { username, isAdmin: data.isAdmin, id: data.id };
                     setCurrentUser(user);
                     localStorage.setItem('currentUser', JSON.stringify(user));
                     if (data.isAdmin) {

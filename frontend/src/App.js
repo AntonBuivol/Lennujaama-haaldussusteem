@@ -6,12 +6,13 @@ import LennujaamAdmin from './LennujaamAdmin';
 import LennujaamKasutaja from './LennujaamKasutaja';
 import MainPage from './MainPage';
 import Navbar from './Navbar';
+import PiletidAdmin from './PiletidAdmin';
+import Piletid from './Piletid';
 
 const App = () => {
     const [currentUser, setCurrentUser] = useState(null);
 
     useEffect(() => {
-        // Восстанавливаем данные пользователя из localStorage при загрузке
         const storedUser = JSON.parse(localStorage.getItem('currentUser'));
         if (storedUser) {
             setCurrentUser(storedUser);
@@ -50,7 +51,7 @@ const App = () => {
                         currentUser && currentUser.isAdmin ? (
                             <LennujaamAdmin />
                         ) : (
-                            <Navigate to="/" />
+                                <Navigate to="/login" />
                         )
                     }
                 />
@@ -58,7 +59,27 @@ const App = () => {
                     path="/lennujaamad"
                     element={
                         currentUser ? (
-                            <LennujaamKasutaja />
+                            <LennujaamKasutaja currentUser={currentUser} />
+                        ) : (
+                            <Navigate to="/login" />
+                        )
+                    }
+                />
+                <Route
+                    path="/piletid"
+                    element={
+                        currentUser ? (
+                            <Piletid />
+                        ) : (
+                            <Navigate to="/login" />
+                        )
+                    }
+                />
+                <Route
+                    path="/piletidAdmin"
+                    element={
+                        currentUser && currentUser.isAdmin ? (
+                            <PiletidAdmin />
                         ) : (
                             <Navigate to="/login" />
                         )

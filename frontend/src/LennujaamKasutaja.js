@@ -9,9 +9,10 @@ function LennujaamKasutaja() {
     const [valjumisaeg, setValjumisaeg] = useState('');
     const [saabumisaeg, setSaabumisaeg] = useState('');
     const [message, setMessage] = useState('');
-    const navigate = useNavigate();
-    const [filteredLennujaamad, setFilteredLennujaamad] = useState([])
+    const [filteredLennujaamad, setFilteredLennujaamad] = useState([]);
     const [sorting, setSort] = useState({ key: '', direction: 'asc' });
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchLennujaamad();
@@ -23,7 +24,7 @@ function LennujaamKasutaja() {
             const data = await response.json();
             setLennujaamad(data);
             setFilteredLennujaamad(data);
-        } catch(error) {
+        } catch (error) {
             setMessage("Error fetching data: " + error.message);
         }
     };
@@ -84,25 +85,57 @@ function LennujaamKasutaja() {
         setFilteredLennujaamad(sorted);
     };
 
+    const handleAddTicket = async (lennujaamId) => {
+        const user = JSON.parse(localStorage.getItem('currentUser'));
+
+        if (user && user.id) {
+            try {
+                const response = await fetch(`https://localhost:7050/Piletid/Lisa/${lennujaamId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(user.id)
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    setMessage('Pilet added successfully');
+                } else {
+                    setMessage(data.message || 'Error adding ticket');
+                }
+            } catch (error) {
+                console.error('Error adding ticket:', error);
+                alert('Error adding ticket');
+            }
+        } else {
+            alert('User not logged in');
+        }
+    };
+
+
+
+
     return (
         <div className="App">
             <h1>Lennujaama Haldussüsteem</h1>
             <h2>Lennujaamad</h2>
             <form>
-                <label for="searchValjumiskoht">Search Väljumiskoht:</label>
-                <input type="text" value={valjumiskoht} onChange={(e) => setValjumiskoht(e.target.value)} placeholder="Serach Väljumiskoht" onKeyUp={filterLennujaamad} />
-                <br/>
-                <label for="searchSaabumiskoht">Search Saabumiskoht:</label>
-                <input type="text" value={saabumiskoht} onChange={(e) => setSaabumiskoht(e.target.value)} placeholder="Serach Saabumiskoht" onKeyUp={filterLennujaamad} />
-                <br/>
-                <label for="searchValjumisaeg">Search Väljumisaeg:</label>
+                <label htmlFor="searchValjumiskoht">Search Väljumiskoht:</label>
+                <input type="text" value={valjumiskoht} onChange={(e) => setValjumiskoht(e.target.value)} placeholder="Search Väljumiskoht" onKeyUp={filterLennujaamad} />
+                <br />
+                <label htmlFor="searchSaabumiskoht">Search Saabumiskoht:</label>
+                <input type="text" value={saabumiskoht} onChange={(e) => setSaabumiskoht(e.target.value)} placeholder="Search Saabumiskoht" onKeyUp={filterLennujaamad} />
+                <br />
+                <label htmlFor="searchValjumisaeg">Search Väljumisaeg:</label>
                 <input type="date" value={valjumisaeg} onChange={(e) => setValjumisaeg(e.target.value)} onKeyUp={filterLennujaamad} />
-                <br/>
-                <label for="searchSaabumisaeg">Search Saabumisaeg:</label>
+                <br />
+                <label htmlFor="searchSaabumisaeg">Search Saabumisaeg:</label>
                 <input type="date" value={saabumisaeg} onChange={(e) => setSaabumisaeg(e.target.value)} onKeyUp={filterLennujaamad} />
                 <br />
                 <button onClick={ResetFilter}>Reset</button>
             </form>
+            {message && <div className="message">{message}</div>}
             <table>
                 <thead>
                     <tr>
@@ -110,16 +143,23 @@ function LennujaamKasutaja() {
                         <th onClick={() => Sort('saabumiskoht')}>Saabumiskoht</th>
                         <th onClick={() => Sort('valjumisaeg')}>Valjumisaeg</th>
                         <th onClick={() => Sort('saabumisaeg')}>Saabumisaeg</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
-                {filteredLennujaamad.map(lennujaam => (
-                    <tr key={lennujaam.id}>
-                        <td>{lennujaam.valjumiskoht}</td>
-                        <td>{lennujaam.saabumiskoht}</td>
-                        <td>{lennujaam.valjumisaeg}</td>
-                        <td>{lennujaam.saabumisaeg}</td>
-                    </tr>
-                ))}
+                <tbody>
+                    {filteredLennujaamad.map((lennujaam) => (
+                        <tr key={lennujaam.id}>
+                            <td>{lennujaam.valjumiskoht}</td>
+                            <td>{lennujaam.saabumiskoht}</td>
+                            <td>{lennujaam.valjumisaeg}</td>
+                            <td>{lennujaam.saabumisaeg}</td>
+                            <td>
+                                <button onClick={() => handleAddTicket(lennujaam.id)}>Add Ticket</button>
+                            </td>
+
+                        </tr>
+                    ))}
+                </tbody>
             </table>
         </div>
     );
